@@ -1,8 +1,10 @@
 const { Router } = require('express');
-const ProcuctsController = require('../controlers/products.controler');
+const publicRoutes = require('./public/routes.public');
+const privateRoutes = require('./private/routes.private');
 
 const router = Router();
 
-router.get('/', ProcuctsController.listAll);
+router.use('/public', publicRoutes);
+router.use('/private', privateRoutes);
 
 module.exports = router;
