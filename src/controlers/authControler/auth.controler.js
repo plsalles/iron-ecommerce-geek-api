@@ -1,6 +1,7 @@
-const User = require('../../models/Users');
-const paramsSchema = require('../../utils/validation');
 const joi = require('joi');
+const User = require('../../models/Users');
+const { paramsSchema, passwordManager } = require('../../utils');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -19,8 +20,8 @@ class AuthControler {
 
     if (validation.error) {
       const errors = validation.error.details.map(error => ({
-        error: error.message.split('" ')[1],
-        field: error.context.key,
+          error: error.message.split('" ')[1],
+          field: error.context.key,
       }));
 
       res.status(400).json(errors);
@@ -34,13 +35,40 @@ class AuthControler {
       return;
     }
 
+
+    req.body.password = passwordManager.encrypt(req.body.password);
+
     await User.create(req.body);
 
     res.status(200).json({ message: 'Usuário cadastrado com sucessso' });
   };
 
-  login = (req, res) => {
-    res.status(200).json(req.body);
+  login = async (req, res) => {
+    const { email, password } = req.body;
+
+    const userFromDb = await User.findOne({ email });
+
+    if (!userFromDb) {
+      res.status(401).json({ message: 'Credenciais não conferem' });
+
+      return;
+    }
+
+    const isPasswordValid = passwordManager.verify(password, userFromDb.password);
+
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Credenciais não conferem' });
+
+      return;
+    }
+
+    const token = jwt.sign(
+      { name: userFromDb.name, email: userFromDb.email, id: userFromDb._id },
+      'nossa-hash-que-protege-o-token',
+      { expiresIn: '15m' },
+    );
+
+    res.status(200).json({ token });
   };
 }
 
