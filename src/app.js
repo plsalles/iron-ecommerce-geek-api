@@ -1,5 +1,7 @@
 const express = require('express');
+const cors = require('cors');
 const apiRoutes = require('./routes/apiRoutes');
+
 require('./database/mongoose');
 
 class App {
@@ -12,6 +14,10 @@ class App {
 
   middlewares = () => {
     this.app.use(express.json());
+    this.app.use(cors({
+      origin: 'http://localhost:3000',
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    }))
   };
 
   routes = () => {

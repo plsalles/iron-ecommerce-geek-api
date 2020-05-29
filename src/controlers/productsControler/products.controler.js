@@ -1,10 +1,13 @@
-const Product = require('../models/Products');
+const Product = require('../../models/Products');
+const ProductsMapper = require('./products.mapper');
 
 class ProductsControler {
   listAll = (req, res) => {
     Product.find()
       .then((data) => {
-        res.status(200).json({ data });
+        const response = ProductsMapper.allProducts(data);
+
+        res.status(200).json(response);
       })
       .catch(err => res.status(500).json({ error: err.message }));
   };
