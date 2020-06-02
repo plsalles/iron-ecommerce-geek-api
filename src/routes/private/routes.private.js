@@ -25,7 +25,7 @@ const protectedRouteMiddleware = (req, res, next) => {
 
 router.use(protectedRouteMiddleware);
 
-router.put('/user', async (req, res) => {
+router.get('/user', async (req, res) => {
   const userFromDb = await User.findById(req.user.id);
 
   res.status(200).json({ user: userFromDb });
