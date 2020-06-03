@@ -15,15 +15,19 @@ class App {
   };
 
   middlewares = () => {
+    this.app.use(express.static(__dirname + '/public'));
     this.app.use(express.json());
     this.app.use(cors({
-      origin: 'http://localhost:3000',
+      origin: ['http://localhost:3000', 'https://iron-geek-api.herokuapp.com'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }))
   };
 
   routes = () => {
     this.app.use('/api', apiRoutes);
+    this.app.use((req, res) => {
+      res.sendFile(__dirname + '/public/index.html')
+    })
   };
 }
 
