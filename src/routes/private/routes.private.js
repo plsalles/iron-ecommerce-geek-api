@@ -15,7 +15,7 @@ const protectedRouteMiddleware = (req, res, next) => {
   }
 
   try {
-    const user = jwt.verify(token.split(' ')[1], 'nossa-hash-que-protege-o-token');
+    const user = jwt.verify(token.split(' ')[1], process.env.JWT_USER_TOKEN_HASH);
     
     req.user = user;
     next();
@@ -35,14 +35,14 @@ router.get('/refresh-token', (req, res) => {
 
   const token = jwt.sign(
     { name, email, id },
-    'nossa-hash-que-protege-o-token',
-    { expiresIn: '30m' },
+    process.env.JWT_USER_TOKEN_HASH,
+    { expiresIn: process.env.JWT_USER_TOKEN_EXPIRATION },
   );
 
   const refresh_token = jwt.sign(
     { name, email, id, token },
-    'nossa-hash-que-protege-o-token',
-    { expiresIn: '1h' },
+    process.env.JWT_USER_TOKEN_HASH,
+    { expiresIn: process.env.JTW_USER_REFRESH_TOKEN_EXPIRATION },
   );
 
   res.status(200).json({

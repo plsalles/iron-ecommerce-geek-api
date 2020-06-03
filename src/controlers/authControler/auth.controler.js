@@ -64,14 +64,14 @@ class AuthControler {
 
     const token = jwt.sign(
       { name: userFromDb.name, email: userFromDb.email, id: userFromDb._id },
-      'nossa-hash-que-protege-o-token',
-      { expiresIn: '30m' },
+      process.env.JTW_USER_TOKEN_HASH,
+      { expiresIn: process.env.JTW_USER_TOKEN_EXPIRATION },
     );
 
     const refresh_token = jwt.sign(
       { name: userFromDb.name, email: userFromDb.email, id: userFromDb._id, token },
-      'nossa-hash-que-protege-o-token',
-      { expiresIn: '1h' },
+      process.env.JTW_USER_TOKEN_HASH,
+      { expiresIn: process.env.JTW_USER_REFRESH_TOKEN_EXPIRATION },
     );
 
     res.status(200).json({
