@@ -1,12 +1,13 @@
 const { Router } = require('express');
 const User = require('../../models/Users');
 const jwt = require('jsonwebtoken');
+const UserControler = require('../../controlers/userControler/user.controler');
 
 const router = Router();
 
 const protectedRouteMiddleware = (req, res, next) => {
   const token = req.get('Authorization') || req.get('authorization');
-  console.log(token)
+
   if (!token) {
     res.status(401).json({ message: 'Token not found' });
 
@@ -19,17 +20,15 @@ const protectedRouteMiddleware = (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    res.status(401).json({ message: err.message });
+    res.status(401).json({ message: 'jwt expired' });
   }
 };
 
 router.use(protectedRouteMiddleware);
 
-router.get('/user', async (req, res) => {
-  const userFromDb = await User.findById(req.user.id);
+router.get('/user', UserControler.listOne);
 
-  res.status(200).json({ user: userFromDb });
-});
+router.put('/user', UserControler.editOne);
 
 router.get('/refresh-token', (req, res) => {
   const { name, email, id } = req.user;
@@ -37,13 +36,13 @@ router.get('/refresh-token', (req, res) => {
   const token = jwt.sign(
     { name, email, id },
     'nossa-hash-que-protege-o-token',
-    { expiresIn: '30s' },
+    { expiresIn: '30m' },
   );
-    console.log(token )
+
   const refresh_token = jwt.sign(
     { name, email, id, token },
     'nossa-hash-que-protege-o-token',
-    { expiresIn: '2m' },
+    { expiresIn: '1h' },
   );
 
   res.status(200).json({

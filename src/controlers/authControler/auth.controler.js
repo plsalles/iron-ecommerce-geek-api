@@ -65,13 +65,13 @@ class AuthControler {
     const token = jwt.sign(
       { name: userFromDb.name, email: userFromDb.email, id: userFromDb._id },
       'nossa-hash-que-protege-o-token',
-      { expiresIn: '30s' },
+      { expiresIn: '30m' },
     );
 
     const refresh_token = jwt.sign(
       { name: userFromDb.name, email: userFromDb.email, id: userFromDb._id, token },
       'nossa-hash-que-protege-o-token',
-      { expiresIn: '2m' },
+      { expiresIn: '1h' },
     );
 
     res.status(200).json({
