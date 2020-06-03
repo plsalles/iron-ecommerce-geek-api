@@ -9,7 +9,7 @@ const protectedRouteMiddleware = (req, res, next) => {
   const token = req.get('Authorization') || req.get('authorization');
 
   if (!token) {
-    res.status(401).json({ message: 'Token not found' });
+    res.status(401).json({ message: 'Token not foundss' });
 
     return;
   }
