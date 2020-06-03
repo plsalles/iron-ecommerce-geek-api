@@ -29,7 +29,7 @@ const products = [
   },
 ];
 
-mongoose.connect('mongodb://localhost/iron-geek-ecommerce', { useNewUrlParser: true })
+mongoose.connect('mongodb://heroku_5r08j4wz:ce2p637rsj75sovm4mef9u96k6@ds211268.mlab.com:11268/heroku_5r08j4wz', { useNewUrlParser: true })
   .then(() => 'connected to database');
 
 Product.insertMany(products)
