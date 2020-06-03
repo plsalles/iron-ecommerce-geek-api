@@ -18,7 +18,7 @@ class App {
     this.app.use(express.static(__dirname + '/src/public'));
     this.app.use(express.json());
     this.app.use(cors({
-      origin: 'http://localhost:3000',
+      origin: ['http://localhost:3000', 'https://teste-app-iron-commerce.herokuapp.com/'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }))
   };
