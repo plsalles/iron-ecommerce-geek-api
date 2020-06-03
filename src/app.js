@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const apiRoutes = require('./routes/apiRoutes');
@@ -13,6 +15,7 @@ class App {
   };
 
   middlewares = () => {
+    this.app.use(express.static(__dirname + '/src/public'));
     this.app.use(express.json());
     this.app.use(cors({
       origin: 'http://localhost:3000',
@@ -22,6 +25,10 @@ class App {
 
   routes = () => {
     this.app.use('/api', apiRoutes);
+    this.app.use((req, res, next) => {
+      // If no routes match, send them the React HTML.
+      res.sendFile(__dirname + "/public/index.html");
+    });
   };
 }
 

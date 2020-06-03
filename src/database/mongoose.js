@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
 module.exports = mongoose.connect(
-  'mongodb://localhost/iron-geek-ecommerce',
+  process.env.MONGODB_URI,
   { useNewUrlParser: true, useUnifiedTopology: true },
 ).then(() => console.log('Connected in database'));
